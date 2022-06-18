@@ -1,0 +1,60 @@
+import tkinter as tk
+from tkinter import ttk
+from time import sleep
+
+contracts = [['jiten', 'maths'], ['kunj', 'science']]
+def createFrontend():
+    window = tk.Tk()
+    window.title("Student Homepage")
+
+    #Create table for displaying contracts
+    contractsTable = ttk.Treeview(window)
+    contractsTable["columns"] = ("otherParty", "subject")
+    contractsTable.column("otherParty", width=200, minwidth=100, stretch=tk.YES)
+    contractsTable.column("subject", width=200, minwidth=10, stretch=tk.YES)
+
+    contractsTable.heading('#0', text='ID')
+    contractsTable.heading("otherParty", text="otherParty", anchor=tk.W)
+    contractsTable.heading("subject", text="subject", anchor=tk.W)
+
+    for i in range(0, len(contracts)):
+        contract = contracts[i]
+
+        contractID = i
+        otherParty = contract[0]
+        subject = contract[1]
+
+        contractsTable.insert("", "end", text=contractID, values=(otherParty, subject))
+
+    contractsTable.pack(side=tk.TOP, fill=tk.X)
+
+    refresh(window, contractsTable)
+    window.mainloop()
+    
+
+def refresh(window, contractsTable):
+    currentlySelected = contractsTable.focus()
+    currentlySelectedValue = contractsTable.item(currentlySelected)['text']
+    
+    contracts = [['akash', 'maths'], ['sharan', 'science']]
+    for i in contractsTable.get_children():
+        contractsTable.delete(i)
+
+    for i in range(0, len(contracts)):
+        contract = contracts[i]
+
+        contractID = i
+        otherParty = contract[0]
+        subject = contract[1]
+
+        contractsTable.insert("", "end", text=contractID, values=(otherParty, subject))
+        if contractID == currentlySelectedValue:
+            print(contractID)
+            child_id = contractsTable.get_children()[-1]
+            contractsTable.focus(child_id)
+            contractsTable.selection_set(child_id)
+
+    window.update()
+    window.after(2000, self.refresh, window, contractsTable)
+
+createFrontend()
